@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+<session-factory>
+	<property name="show_sql">true</property>
+	<property name="myeclipse.connection.profile">jboa</property>
+	<property name="connection.url">
+		jdbc:oracle:thin:@10.0.0.46:1521:orcl
+	</property>
+	<property name="connection.username">jbit</property>
+	<property name="connection.password">bdqn</property>
+	<property name="connection.driver_class">
+		oracle.jdbc.driver.OracleDriver
+	</property>
+	<property name="dialect">
+		org.hibernate.dialect.Oracle9Dialect
+	</property>
+	<property name="format_sql">true</property>
+	<mapping resource="com/jbit/jboa/entity/Account.hbm.xml" />
+	<mapping resource="com/jbit/jboa/entity/CheckResult.hbm.xml" />
+	<mapping resource="com/jbit/jboa/entity/ClaimVoucher.hbm.xml" />
+	<mapping resource="com/jbit/jboa/entity/ClaimVoucherDetail.hbm.xml" />
+	<mapping resource="com/jbit/jboa/entity/Department.hbm.xml" />
+	<mapping resource="com/jbit/jboa/entity/Dictionary.hbm.xml" />
+	<mapping resource="com/jbit/jboa/entity/Employee.hbm.xml" />
+	<mapping resource="com/jbit/jboa/entity/Postition.hbm.xml" />
+</session-factory>
+</hibernate-configuration>

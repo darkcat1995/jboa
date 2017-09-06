@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation"
+			value="classpath:hibernate.cfg.xml">
+		</property>
+	</bean>
+	<!-- action	-->
+	
+	<!--报销单action配置		-->
+	<bean id="claimVoucherAction"
+		class="com.jbit.jboa.action.ClaimVoucherAction" scope="prototype">
+		<property name="claimVoucherService"
+			ref="claimVoucherService">
+		</property>
+		<property name="claimVoucherDetailService"
+			ref="claimVoucherDetailService">
+		</property>
+		<property name="employeeService" ref="empService"></property>
+		<property name="checkResultService" ref="checkResultService"></property>
+	</bean>
+	<!--报销单审核action配置		-->
+	<bean id="CheckResultAction"
+		class="com.jbit.jboa.action.CheckResultAction" scope="prototype">
+		<property name="claimVoucherService"
+			ref="claimVoucherService">
+		</property>
+		<property name="employeeService" ref="empService"></property>
+		<property name="checkResultService" ref="checkResultService"></property>
+	</bean>
+	<!--验证码action配置		-->
+	<bean id="randomAction" class="com.jbit.jboa.action.RandomAction"
+		scope="prototype">
+	</bean>
+	<!--用户action配置		-->
+	<bean id="empAction" class="com.jbit.jboa.action.EmployeeAction"
+		scope="prototype">
+		<property name="empService" ref="empService"></property>
+	</bean>
+	<!-- service	-->
+	<!--用户service配置		-->
+	<bean id="empService"
+		class="com.jbit.jboa.service.impl.EmployeeServiceImpl">
+		<property name="empDao" ref="empDao" />
+	</bean>
+	<!--报销单service配置		-->
+	<bean id="claimVoucherService"
+		class="com.jbit.jboa.service.impl.ClaimVoucherServiceImpl">
+		<property name="claimVoucherDao" ref="claimVoucherDao" />
+		<property name="claimVoucherDetailDao"
+			ref="claimVoucherDetailDao" />
+		<property name="employeeDao" ref="empDao" />
+	</bean>
+	<!--报销单详细信息service配置		-->
+	<bean id="claimVoucherDetailService"
+		class="com.jbit.jboa.service.impl.ClaimVoucherDetailServiceImpl">
+		<property name="claimVoucherDao" ref="claimVoucherDao" />
+		<property name="claimVoucherDetailDao"
+			ref="claimVoucherDetailDao" />
+	</bean>
+	<!--报销单审核service配置		-->
+	<bean id="checkResultService"
+		class="com.jbit.jboa.service.impl.CheckResultServiceImpl">
+		<property name="checkResultDao" ref="checkResultDao" />
+		<property name="claimVoucherDao" ref="claimVoucherDao" />
+	</bean>
+	<!-- 配置事务  -->
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="get*" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="find*" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="search*" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="query*" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="submit*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="del*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="check*" propagation="REQUIRED" />
+			<tx:method name="do*" propagation="REQUIRED" />
+			<tx:method name="*" propagation="REQUIRED" read-only="true" />
+
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="serviceMethod"
+			expression="execution(* com.jbit.jboa.service.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod" />
+	</aop:config>
+
+	<!--用户dao配置	-->
+	<bean id="empDao" class="com.jbit.jboa.dao.impl.EmployeeDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!--报销单dao配置	-->
+	<bean id="claimVoucherDao"
+		class="com.jbit.jboa.dao.impl.ClaimVoucherDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!--报销单详细信息dao配置	-->
+	<bean id="claimVoucherDetailDao"
+		class="com.jbit.jboa.dao.impl.ClaimVoucherDetailDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!--报销单审核dao配置	-->
+	<bean id="checkResultDao"
+		class="com.jbit.jboa.dao.impl.CheckResultDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>

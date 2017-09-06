@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="employee" extends="struts-default">
+		<!-- 登录操作Action配置 -->
+		<action name="login" class="empAction" method="login">
+			<result name="input" type="dispatcher">/login.jsp</result>
+			<!-- redirect重定向不会重新提交表单 -->
+			<result name="staff" type="redirect">/staff.jsp</result>
+			<result name="deptManager" type="redirect">/searchClaimVoucher </result>
+			<result name="manager" type="redirect">/searchClaimVoucher </result>
+			<result name="cashier" type="redirect">/searchClaimVoucher </result>
+		</action>
+		<action name="loginOut" class="empAction" method="loginOut">
+			<result name="success" type="redirect">/login.jsp</result>
+		</action>
+	</package>
+	<!-- 验证码操作Action配置 -->
+	<package name="rand" extends="struts-default">
+		<!-- Random验证码 -->
+		<action name="rand" class="randomAction">
+			<result type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+	<!-- 关于报销单增删改查Action配置-->
+	<package name="claimVoucher" extends="struts-default">
+		<!--员工提交后，部门经理，总经理，财务登陆后调用action		-->
+		<action name="searchClaimVoucher" class="claimVoucherAction"
+			method="searchClaimVoucher">
+			<result name="success" type="redirect"> /claim_voucher_newSearch.jsp 
+			</result>
+			<result name="input" type="redirect">/login.jsp</result>
+		</action>
+		<!-- 将表单中的报销单信息保存到库中，报销单处理人为自己-->
+		<action name="save" class="claimVoucherAction" method="save">
+			<result name="success" type="redirect"> /searchClaimVoucher </result>
+			<result name="input" type="redirect">/staff.jsp</result>
+		</action>
+		<!-- 将表单中的报销单信息保存到库中，报销单处理人为部门经理-->
+		<action name="submit" class="claimVoucherAction" method="submit">
+			<result name="success" type="redirect"> /searchClaimVoucher </result>
+			<result name="input" type="redirect">/staff.jsp</result>
+		</action>
+		<!-- 将表单中的报销单详细信息保存到库中-->
+		<action name="addDetail" class="claimVoucherAction" method="addDetail">
+			<result name="success" type="redirect">/staff.jsp</result>
+			<result name="input" type="redirect">/staff.jsp</result>
+		</action>
+		<!-- 在查询列表中删除符合删除条件的报销单-->
+		<action name="delete" class="claimVoucherAction" method="deletClaimVoucher">
+			<result name="success" type="redirect"> /searchClaimVoucher </result>
+			<result name="input" type="redirect"> /claim_voucher_search.jsp </result>
+		</action>
+		<!-- 在查询列表中查看符合查看条件的报销单-->
+		<action name="view" class="claimVoucherAction" method="viewClaimVoucher">
+			<result name="success" type="redirect"> /claim_voucher_view.jsp </result>
+			<result name="input" type="redirect"> /claim_voucher_view.jsp </result>
+		</action>
+		<!-- 在查询列表中编辑符合编辑条件的报销单-->
+		<action name="edit" class="claimVoucherAction" method="editClaimVoucher">
+			<result name="success" type="redirect">/staff.jsp</result>
+			<result name="input" type="redirect">/claim_voucher_newSearch.jsp</result>
+		</action>
+
+		<!-- 在添加报销单页面中删除已经添加的详细信息-->
+		<action name="deleteClaimVoucherDetial" class="claimVoucherAction"
+			method="deleteClaimVoucherDetial">
+			<result name="success" type="redirect">/staff.jsp</result>
+			<result name="input" type="redirect">/staff.jsp</result>
+		</action>
+		<!-- 在查询列表中审核符合条件的报销单-->
+		<action name="toCheck" class="claimVoucherAction" method="toCheck">
+			<result name="success" type="redirect"> /claim_voucher_check.jsp 
+			</result>
+			<result name="input" type="redirect">/login.jsp</result>
+		</action>
+	</package>
+	<!-- 报销单审核Action -->
+	<package name="checkResult" extends="struts-default">
+		<!-- 报销单审核通过-->
+		<action name="pass" class="CheckResultAction" method="passClaimVoucher">
+			<result name="success" type="redirect"> /searchClaimVoucher </result>
+			<result name="input">/claim_voucher_check.jsp</result>
+		</action>
+		<!-- 报销单审核拒绝-->
+		<action name="regist" class="CheckResultAction" method="registClaimVoucher">
+			<result name="success" type="redirect"> /searchClaimVoucher </result>
+			<result name="input">/claim_voucher_listm.jsp</result>
+		</action>
+		<!-- 报销单审核打回-->
+		<action name="back" class="CheckResultAction" method="returnClaimVoucher">
+			<result name="success" type="redirect"> /searchClaimVoucher </result>
+			<result name="input">/claim_voucher_check.jsp</result>
+		</action>
+	</package>
+</struts>
